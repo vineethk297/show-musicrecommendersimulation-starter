@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "WebSearch",
+      "Bash(python -m src.main)",
+      "Bash(PYTHONPATH=src python src/main.py)"
+    ]
+  }
+}
