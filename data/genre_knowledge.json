@@ -1,0 +1,34 @@
+{
+  "genres": {
+    "pop": "Pop music is built around catchy hooks, polished production, and broad mainstream appeal. It typically features verse-chorus structures, strong melodic lines, and upbeat energy that suits casual listening and social settings.",
+    "lofi": "Lo-fi (low fidelity) music intentionally embraces imperfections like tape hiss and soft beats to create a warm, nostalgic atmosphere. It is widely used for studying, relaxing, or background focus sessions.",
+    "rock": "Rock music is driven by electric guitars, assertive rhythms, and high energy. It spans everything from polished arena anthems to raw, unfiltered alternative sounds, often evoking intensity and emotional release.",
+    "ambient": "Ambient music prioritizes texture and atmosphere over melody or rhythm. It creates immersive sonic environments suited for meditation, deep focus, or unwinding, often with little to no percussion.",
+    "jazz": "Jazz is an improvisational genre rooted in blues and swing. It prizes live performance nuance, rich harmonic complexity, and a relaxed conversational feel between instruments.",
+    "synthwave": "Synthwave draws from 1980s electronic aesthetics — pulsing analog synthesizers, neon-soaked atmosphere, and cinematic production. It evokes nostalgia for retro-futuristic soundscapes.",
+    "indie pop": "Indie pop blends the melodic warmth of pop with the creative independence of alternative music. It tends toward introspective lyrics, jangly guitars, and an intimate DIY production style.",
+    "hip-hop": "Hip-hop combines rhythmic spoken-word delivery (rapping) with sample-based or produced beats. It is a genre deeply rooted in storytelling, cultural commentary, and urban identity.",
+    "r&b": "Rhythm and Blues (R&B) is a genre defined by soulful vocals, smooth grooves, and themes of love and emotion. Modern R&B blends traditional soul with contemporary production and electronic elements.",
+    "classical": "Classical music encompasses composed orchestral and chamber works spanning centuries. It features complex arrangements, dynamic range, and emotional depth designed for attentive, focused listening.",
+    "country": "Country music centers on storytelling through twangy guitar, fiddle, and relatable lyrics about everyday life, love, loss, and rural identity. It balances tradition with evolving contemporary production.",
+    "metal": "Metal is defined by heavily distorted guitars, aggressive rhythms, and high-intensity performance. It channels raw energy, power, and often a sense of catharsis through extreme dynamics.",
+    "electronic": "Electronic music is produced primarily with synthesizers, drum machines, and digital tools. It encompasses a wide range of styles from driving dance floor energy to experimental sonic exploration.",
+    "folk": "Folk music is rooted in acoustic instruments and storytelling traditions. It values authenticity, simplicity, and emotional honesty, often reflecting community, nature, and personal experience.",
+    "soul": "Soul music blends gospel passion, blues expression, and R&B groove to create music that is emotionally direct and uplifting. It is defined by powerful vocals and a communal, heartfelt spirit."
+  },
+  "moods": {
+    "happy": "Happy tracks radiate positivity and optimism. They feature bright melodies, major keys, and upbeat tempos that naturally lift mood and energy, making them ideal for celebrations or morning routines.",
+    "chill": "Chill music is relaxed and unhurried, designed to lower stress and invite a calm mental state. It pairs well with quiet activities like reading, studying, or winding down after a long day.",
+    "intense": "Intense tracks are high-energy and emotionally forceful. They push tempo and drive, making them effective for workouts, competitive gaming, or moments that demand peak focus and adrenaline.",
+    "relaxed": "Relaxed music sits between chill and sleepy — comfortable and easy-going without demanding attention. It works well as background accompaniment to conversation or light creative work.",
+    "moody": "Moody music carries an atmospheric, introspective quality. It often blends darker tones with melodic beauty, evoking nostalgia, longing, or a bittersweet emotional complexity.",
+    "focused": "Focused music minimizes distraction with steady rhythms and minimal lyrics. It is engineered to sustain concentration and cognitive flow during tasks like coding, writing, or studying.",
+    "melancholic": "Melancholic music leans into sadness or longing as an aesthetic experience. Rather than wallowing, it transforms difficult emotions into something reflective, beautiful, and cathartic.",
+    "romantic": "Romantic music is intimate and expressive, emphasizing connection and tenderness. Slow tempos, lush harmonies, and emotionally resonant vocals make it perfect for close, personal moments.",
+    "peaceful": "Peaceful music is gentle and serene, with minimal tension or dynamics. It soothes the nervous system and encourages stillness, rest, and a quiet sense of well-being.",
+    "nostalgic": "Nostalgic music evokes vivid memories and a longing for the past. It often uses familiar sonic cues — warm tones, simple melodies — that trigger personal associations and emotional recall.",
+    "aggressive": "Aggressive music channels raw intensity and confrontation. High tempos, distorted tones, and forceful delivery make it ideal for releasing tension, powering through obstacles, or expressing frustration.",
+    "energetic": "Energetic music is built to move bodies and ignite action. High BPM, driving basslines, and dynamic builds make it the natural soundtrack for dancing, exercising, or powering through tasks.",
+    "uplifting": "Uplifting music inspires hope and forward momentum. It pairs positive emotional content with rising melodic arcs and anthemic production, making it feel like a call to action or celebration."
+  }
+}

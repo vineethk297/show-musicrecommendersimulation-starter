@@ -34,18 +34,76 @@ class Recommender:
     OOP implementation of the recommendation logic.
     Required by tests/test_recommender.py
     """
-    def __init__(self, songs: List[Song]):
+    def __init__(self, songs: List[Song], kb_path: Optional[str] = None):
         self.songs = songs
+        self._kb = self._load_kb(kb_path)
+
+    def _load_kb(self, path: Optional[str]) -> Dict:
+        """Load genre/mood knowledge base from JSON; returns empty dict if file not found."""
+        import json, os
+        if path is None:
+            path = os.path.join(os.path.dirname(__file__), "..", "data", "genre_knowledge.json")
+        try:
+            with open(path, encoding="utf-8") as f:
+                return json.load(f)
+        except FileNotFoundError:
+            return {}
+
+    def _score(self, user: UserProfile, song: Song) -> Tuple[float, List[str]]:
+        """Score a Song against a UserProfile using the standard formula (max 5.0)."""
+        score = 0.0
+        reasons: List[str] = []
+
+        if song.genre.lower() == user.favorite_genre.lower():
+            score += 2.0
+            reasons.append("genre match (+2.0)")
+
+        if song.mood.lower() == user.favorite_mood.lower():
+            score += 1.0
+            reasons.append("mood match (+1.0)")
+
+        energy_points = 1.5 * (1.0 - abs(song.energy - user.target_energy))
+        score += energy_points
+        reasons.append(f"energy similarity (+{energy_points:.2f})")
+
+        if user.likes_acoustic and song.acousticness >= 0.6:
+            score += 0.5
+            reasons.append("acoustic bonus (+0.5)")
+
+        return round(score, 4), reasons
+
+    CONFIDENCE_THRESHOLD = 2.5
 
     def recommend(self, user: UserProfile, k: int = 5) -> List[Song]:
         """Return the top k Song objects ranked by score for the given UserProfile."""
-        # TODO: Implement recommendation logic
-        return self.songs[:k]
+        scored = sorted(self.songs, key=lambda s: self._score(user, s)[0], reverse=True)
+        return scored[:k]
+
+    def is_low_confidence(self, user: UserProfile) -> bool:
+        """Return True if the best available score for this user falls below CONFIDENCE_THRESHOLD."""
+        if not self.songs:
+            return True
+        top_score = max(self._score(user, s)[0] for s in self.songs)
+        return top_score < self.CONFIDENCE_THRESHOLD
 
     def explain_recommendation(self, user: UserProfile, song: Song) -> str:
         """Return a human-readable string explaining why a song was recommended to a user."""
-        # TODO: Implement explanation logic
-        return "Explanation placeholder"
+        score, reasons = self._score(user, song)
+        base = f"'{song.title}' by {song.artist} scored {score:.2f}/5.0 — " + " | ".join(reasons)
+
+        if score < self.CONFIDENCE_THRESHOLD:
+            base = "[LOW CONFIDENCE] " + base
+
+        genre_desc = self._kb.get("genres", {}).get(song.genre.lower(), "")
+        mood_desc = self._kb.get("moods", {}).get(song.mood.lower(), "")
+
+        extras = []
+        if genre_desc:
+            extras.append(f"Genre insight: {genre_desc}")
+        if mood_desc:
+            extras.append(f"Mood insight: {mood_desc}")
+
+        return base + ("\n" + "\n".join(extras) if extras else "")
 
 def load_songs(csv_path: str) -> List[Dict]:
     """Read a songs CSV and return a list of dicts with numeric fields pre-converted."""

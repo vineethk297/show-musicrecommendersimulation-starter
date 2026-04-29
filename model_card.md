@@ -20,7 +20,7 @@ A lightweight, rule-based music recommender that matches songs to a listener's c
 **What it's NOT for:**
 - Real production use. The catalog is 18 songs — it will run out of good matches fast.
 - Replacing a streaming app. It has no listening history, no collaborative filtering, and no awareness of what the user has already heard.
-- Making decisions for real users. It has no confidence threshold, so it will recommend something even when nothing in the catalog fits.
+- Making high-stakes decisions for real users. Even with a confidence threshold in place, a low-confidence flag is only a hint — the system still has no way to know whether the user would actually enjoy the song.
 
 ---
 
@@ -36,6 +36,10 @@ Here is how the points work:
 - **Acoustic bonus** gives 0.5 points, but only if you said you like acoustic music and the song actually is acoustic. It does not apply otherwise.
 
 After every song gets a score, the system sorts them from highest to lowest and hands back the top 5.
+
+**Confidence guardrail.** Before returning results, the system checks whether the highest available score clears a threshold of 2.5 out of 5.0. If it doesn't, the result is flagged as `[LOW CONFIDENCE]` in both the explanation string and via the `is_low_confidence()` method. This happens automatically for any user whose preferred genre does not exist in the catalog — a "ghost genre" user will never earn the +2.0 genre bonus, capping their best possible score at 2.5, which is exactly at the boundary.
+
+**Knowledge-base enrichment.** Every explanation is augmented with two additional lines drawn from a local JSON knowledge base (`data/genre_knowledge.json`): a "Genre insight" and a "Mood insight." These are plain-English descriptions of the song's genre and mood retrieved by exact key lookup — a minimal form of template-based retrieval that gives users more context than the raw scoring breakdown alone.
 
 ---
 
@@ -83,15 +87,15 @@ The **realistic profiles** were High-Energy Pop (genre=pop, mood=happy, energy=0
 
 The **edge-case profiles** were designed to expose cracks. A "High-Energy Lofi" profile deliberately asked for things that contradict each other — lofi music is by nature slow and soft, but the energy target was set to 0.95. A "Ghost Genre" profile asked for k-pop, which doesn't exist in the catalog at all. A "Conflicting Genre + Mood" profile asked for country music with a romantic mood, even though the only country song in the catalog has a nostalgic mood, not a romantic one.
 
-**What surprised me most** was how confidently the system behaved even when it had nothing good to offer. When the Ghost Genre profile ran, the top result scored only 2.47 out of 5.0 — barely half marks — but the output looked identical to a strong recommendation. There was no warning, no asterisk, no "we couldn't find a great match." The system just quietly handed over whatever came closest. In a real app, a user would have no idea they were getting a consolation prize.
+**What surprised me most** was how confidently the system behaved even when it had nothing good to offer. When the Ghost Genre profile ran, the top result scored only 2.47 out of 5.0 — barely half marks — but the output originally looked identical to a strong recommendation. There was no warning, no asterisk, no "we couldn't find a great match." The system just quietly handed over whatever came closest. The confidence threshold added in the extension directly addresses this: the same Ghost Genre run now produces a `[LOW CONFIDENCE]` prefix and `is_low_confidence()` returns `True`, so callers have a machine-readable signal rather than having to eyeball the score themselves.
+
+**Automated test coverage.** Six pytest tests cover the system end to end: two baseline tests verify that `recommend()` returns sorted results and `explain_recommendation()` returns a non-empty string; four evaluation tests verify genre dominance (the genre-match song always outranks others when present), result diversity (ghost-genre results span multiple genres), low-confidence detection (ghost genre triggers the flag, matched genre does not), and acoustic bonus precision (the bonus is exactly +0.5, confirmed with `pytest.approx`).
 
 A second surprise was how often **Gym Hero kept appearing** for profiles it had no business serving. It showed up in the High-Energy Pop, Deep Intense Rock, and even the High-Energy Lofi edge case. The reason is simple: Gym Hero has a very high energy value (0.93), and energy similarity is the only signal that fires for *every* song no matter what. So whenever a user wants high energy and nothing else matches well, Gym Hero floats up by default. It is not a recommendation — it is an energy-proximity accident.
 
 ---
 
 ## 8. Future Work
-
-**Add a minimum score threshold.** Right now the system always returns exactly k results, even if the best match is weak. A simple fix would be to only show songs that scored above, say, 2.5 out of 5.0 — and tell the user honestly when fewer than k songs cleared the bar. That alone would eliminate the "consolation prize" problem.
 
 **Score more audio features continuously.** Energy is the only numeric feature being scored on a sliding scale. Valence (how happy vs. sad a song sounds) and acousticness would both improve results if scored the same way. A user who wants something melancholic would benefit from a valence proximity score, not just a mood label match.
 
